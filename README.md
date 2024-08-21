@@ -1,7 +1,7 @@
 <br>
 <br>
 
-# How MTCNN Worked:
+# How `MTCNN` Worked:
 
 <br>
 
