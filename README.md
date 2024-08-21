@@ -5,11 +5,7 @@
 
 <br>
 
-```
-
-Multi-task Cascaded Convolutional Network (MTCNN) model has three convolutional networks (P-Net, R-Net, and O-Net) and is able to outperform many face-detection benchmarks while retaining real-time performance.
-
-```
+`Multi-task Cascaded Convolutional Network (MTCNN) model has three convolutional networks (P-Net, R-Net, and O-Net) and is able to outperform many face-detection benchmarks while retaining real-time performance.`
 
 ---
 
