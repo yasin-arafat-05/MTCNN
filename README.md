@@ -19,107 +19,176 @@
 
 Image:01 `(MTCNN Structure)`
 
+### General Formulas
 
+1. **Convolution Output Size Formula:**
+   
+   $\text{Output Size}$ = $\left\lfloor \frac{\text{Input Size} - \text{Filter Size} + 2 \times \text{Padding}}{\text{Stride}} \right\rfloor$ + 1
+   
+
+2. **Pooling Output Size Formula:**
+   
+   $\text{Output Size}$ = $\left\lfloor \frac{\text{Input Size} - \text{Pool Size}}{\text{Stride}} \right\rfloor$ + 1
+   
 
 ### P-Net (Proposal Network)
 1. **Input Size: 12x12x3**
-   - The input to P-Net is an image of size 12x12 pixels with 3 color channels (RGB).
+   - The input to P-Net is an image of size 12x12 pixels with 3 channels.
 
-2. **First Convolution Layer (Conv: 3x3)**
-   - **Operation**: A convolution operation with 10 filters of size 3x3.
-   - **Output Size**: 10 feature maps of size 10x10 (after padding and stride are applied), resulting in a dimension of `10x10x10`.
+2. **First Convolution Layer (3x3 filter, stride 1, no padding)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}}$ = $\left\lfloor \frac{12 - 3 + 0}{1} \right\rfloor$ + 1 = 10
+     
+   - **Output Depth**: 10 filters, so the depth is 10.
+   - **Output Size**: 10x10x10.
 
-3. **Max Pooling Layer (MP: 3x3)**
-   - **Operation**: A max-pooling operation with a 3x3 window and a stride of 2.
-   - **Output Size**: This reduces the spatial dimensions to 5x5, resulting in a size of `5x5x10`.
+3. **Max Pooling Layer (3x3 pool, stride 2)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}}$ = $\left\lfloor \frac{10 - 3}{2} \right\rfloor$ + 1 = 4 + 1 = 5
+     
+   - **Output Size**: 5x5x10.
 
-4. **Second Convolution Layer (Conv: 3x3)**
-   - **Operation**: A convolution operation with 16 filters of size 3x3.
-   - **Output Size**: This further reduces the spatial dimensions to 3x3, resulting in a size of `3x3x16`.
+4. **Second Convolution Layer (3x3 filter, stride 1, no padding)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}}$ = $\left\lfloor \frac{5 - 3 + 0}{1} \right\rfloor$ + 1 = 3
+     
+   - **Output Depth**: 16 filters, so the depth is 16.
+   - **Output Size**: 3x3x16.
 
-5. **Third Convolution Layer (Conv: 3x3)**
-   - **Operation**: A convolution operation with 32 filters of size 3x3.
-   - **Output Size**: The output size becomes `1x1x32` due to the reduction in spatial dimensions.
+5. **Third Convolution Layer (3x3 filter, stride 1, no padding)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}}$ = $\left\lfloor \frac{3 - 3 + 0}{1} \right\rfloor$ + 1 = 1
+     
+   - **Output Depth**: 32 filters, so the depth is 32.
+   - **Output Size**: 1x1x32.
 
 6. **Output Layers**
-   - **Face Classification**: `1x1x2` (indicates face or not)
-   - **Bounding Box Regression**: `1x1x4` (bounding box coordinates)
-   - **Facial Landmark Localization**: `1x1x10` (5 key points: left eye, right eye, nose, left mouth corner, right mouth corner)
+   - **Face Classification**: 1x1x2
+   - **Bounding Box Regression**: 1x1x4
+   - **Facial Landmark Localization**: 1x1x10
 
 ### R-Net (Refinement Network)
 1. **Input Size: 24x24x3**
-   - The input to R-Net is an image of size 24x24 pixels with 3 color channels.
+   - The input to R-Net is an image of size 24x24 pixels with 3 channels.
 
-2. **First Convolution Layer (Conv: 3x3)**
-   - **Operation**: A convolution operation with 28 filters of size 3x3.
-   - **Output Size**: 28 feature maps of size 22x22.
+2. **First Convolution Layer (3x3 filter, stride 1, no padding)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}}$ = $\left\lfloor \frac{24 - 3 + 0}{1} \right\rfloor$ + 1 = 22
+     
+   - **Output Depth**: 28 filters, so the depth is 28.
+   - **Output Size**: 22x22x28.
 
-3. **Max Pooling Layer (MP: 3x3)**
-   - **Operation**: A max-pooling operation with a 3x3 window and stride of 2.
-   - **Output Size**: Reduces dimensions to `11x11x28`.
+3. **Max Pooling Layer (3x3 pool, stride 2)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}} = \left\lfloor \frac{22 - 3}{2} \right\rfloor$ + 1 = 10 + 1 = 11
+     
+   - **Output Size**: 11x11x28.
 
-4. **Second Convolution Layer (Conv: 3x3)**
-   - **Operation**: A convolution operation with 48 filters of size 3x3.
-   - **Output Size**: 48 feature maps of size 9x9.
+4. **Second Convolution Layer (3x3 filter, stride 1, no padding)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}} = \left\lfloor \frac{11 - 3 + 0}{1} \right\rfloor$ + 1 = 9
+     
+   - **Output Depth**: 48 filters, so the depth is 48.
+   - **Output Size**: 9x9x48.
 
-5. **Max Pooling Layer (MP: 3x3)**
-   - **Operation**: A max-pooling operation with a 3x3 window and stride of 2.
-   - **Output Size**: Reduces dimensions to `4x4x48`.
+5. **Max Pooling Layer (3x3 pool, stride 2)**
+   - **Output Height and Width**:
+     
+     H_{\text{out}} = $\left\lfloor \frac{9 - 3}{2} \right\rfloor$ + 1 = 4 + 1 = 5
+     
+   - **Output Size**: 4x4x48.
 
-6. **Third Convolution Layer (Conv: 2x2)**
-   - **Operation**: A convolution operation with 64 filters of size 2x2.
-   - **Output Size**: 64 feature maps of size `3x3`.
+6. **Third Convolution Layer (2x2 filter, stride 1, no padding)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}}$ = $\left\lfloor \frac{4 - 2 + 0}{1} \right\rfloor$ + 1 = 3
+     
+   - **Output Depth**: 64 filters, so the depth is 64.
+   - **Output Size**: 3x3x64.
 
 7. **Fully Connected Layer**
-   - **Operation**: Flattens the feature maps to 576 units (3x3x64).
+   - **Flattening**: Converts 3x3x64 to 576 units.
    - **Output Size**: 128 units.
 
 8. **Output Layers**
-   - **Face Classification**: `2` (face or not)
-   - **Bounding Box Regression**: `4` (bounding box coordinates)
-   - **Facial Landmark Localization**: `10` (coordinates for 5 key points)
+   - **Face Classification**: 2 units
+   - **Bounding Box Regression**: 4 units
+   - **Facial Landmark Localization**: 10 units
 
 ### O-Net (Output Network)
 1. **Input Size: 48x48x3**
-   - The input to O-Net is an image of size 48x48 pixels with 3 color channels.
+   - The input to O-Net is an image of size 48x48 pixels with 3 channels.
 
-2. **First Convolution Layer (Conv: 3x3)**
-   - **Operation**: A convolution operation with 32 filters of size 3x3.
-   - **Output Size**: 32 feature maps of size 46x46.
+2. **First Convolution Layer (3x3 filter, stride 1, no padding)**
+   - **Output Height and Width**:
+     
+     H_{\text{out}} = $\left\lfloor \frac{48 - 3 + 0}{1} \right\rfloor$ + 1 = 46
+     
+   - **Output Depth**: 32 filters, so the depth is 32.
+   - **Output Size**: 46x46x32.
 
-3. **Max Pooling Layer (MP: 3x3)**
-   - **Operation**: A max-pooling operation with a 3x3 window and stride of 2.
-   - **Output Size**: Reduces dimensions to `23x23x32`.
+3. **Max Pooling Layer (3x3 pool, stride 2)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}}$ = $\left\lfloor \frac{46 - 3}{2} \right\rfloor$ + 1 = 22 + 1 = 23
+     
+   - **Output Size**: 23x23x32.
 
-4. **Second Convolution Layer (Conv: 3x3)**
-   - **Operation**: A convolution operation with 64 filters of size 3x3.
-   - **Output Size**: 64 feature maps of size 21x21.
+4. **Second Convolution Layer (3x3 filter, stride 1, no padding)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}}$ = $\left\lfloor \frac{23 - 3 + 0}{1} \right\rfloor$ + 1 = 21
+     
+   - **Output Depth**: 64 filters, so the depth is 64.
+   - **Output Size**: 21x21x64.
 
-5. **Max Pooling Layer (MP: 3x3)**
-   - **Operation**: A max-pooling operation with a 3x3 window and stride of 2.
-   - **Output Size**: Reduces dimensions to `10x10x64`.
+5. **Max Pooling Layer (3x3 pool, stride 2)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}}$ = $\left\lfloor \frac{21 - 3}{2} \right\rfloor$ + 1 = 9 + 1 = 10
 
-6. **Third Convolution Layer (Conv: 2x2)**
-   - **Operation**: A convolution operation with 64 filters of size 2x2.
-   - **Output Size**: Reduces spatial dimensions to `4x4x64`.
+   - **Output Size**: 10x10x64.
 
-7. **Max Pooling Layer (MP: 2x2)**
-   - **Operation**: A max-pooling operation with a 2x2 window and stride of 2.
-   - **Output Size**: Reduces dimensions to `3x3x64`.
+6. **Third Convolution Layer (2x2 filter, stride 1, no padding)**
+   - **Output Height and Width**:
+     $H_{\text{out}}$ = $\left\lfloor \frac{10 - 2 + 0}{1} \right\rfloor$ + 1 = 9
+
+   - **Output Depth**: 64 filters, so the depth is 64.
+   - **Output Size**: 4x4x64.
+
+7. **Max Pooling Layer (2x2 pool, stride 2)**
+   - **Output Height and Width**:
+     
+     $H_{\text{out}}$ = $\left\lfloor \frac{4 - 2}{2} \right\rfloor$ + 1 = 1 + 1 = 3
+     
+   - **Output Size**: 3x3x64.
 
 8. **Fully Connected Layer**
-   - **Operation**: Flattens the feature maps to 576 units (3x3x64).
-   - **Output Size**: 128 units.
+   - **Flattening**: Converts 3x3x64 to 576 units.
+   - **Output Size**: 256 units.
 
 9. **Output Layers**
-   - **Face Classification**: `2` (face or not)
-   - **Bounding Box Regression**: `4` (bounding box coordinates)
-   - **Facial Landmark Localization**: `10` (coordinates for 5 key points)
+   - **Face Classification**: 2 units
+   - **Bounding Box Regression**: 4 units
+   - **Facial Landmark Localization**: 10 units
+
+### Summary
+Each network (P-Net, R-Net, O-Net) progressively reduces the spatial dimensions of the input image while increasing the depth through a series of convolutional layers and pooling operations. The final output includes face classification, bounding box regression, and facial landmark localization, which are critical
+
 
 
 
 <br>
 <br>
+
+---
 
 # Stage:01
 
