@@ -19,23 +19,20 @@
 
 Image:01 `(MTCNN Structure)`
 
-#### Output calculation formula for convolution layer:
 
-
-To calculate the output dimensions of a convolution layer, you can use the following formula:
-
-### Output Dimensions Calculation for Convolution
+### Output Dimensions Calculation for Convolution layer:
 
 For an input image with dimensions $\( H_{\text{in}} \times W_{\text{in}} \times D_{\text{in}} \)$, the output dimensions after applying a convolutional layer with $\( F \)$ filters, filter size $\( K \times K \)$, stride $\( S \)$, and padding $\( P \)$ are given by:
 
-1. **Output Height $(\( H_{\text{out}} \))$**:  
-   $H_{\text{out}} = \left\lfloor \frac{H_{\text{in}} - K + 2P}{S} \right\rfloor + 1$
+1. **Output Height (\( H_{\text{out}} \))**:  
+   $
+   H_{\text{out}} = \left\lfloor \frac{H_{\text{in}} - K + 2P}{S} \right\rfloor + 1$
 
 2. **Output Width (\( W_{\text{out}} \))**:  
    
    $W_{\text{out}} = \left\lfloor \frac{W_{\text{in}} - K + 2P}{S} \right\rfloor + 1$
 
-3. **Output Depth (\( D_{\text{out}} \))**:  
+3. **Output Depth $(\( D_{\text{out}} \))$**:  
    $D_{\text{out}} = F$
 
 Here:
@@ -47,6 +44,9 @@ Here:
 - $\( P \)$ = padding (number of pixels added to each side of the input).
 - $\( F \)$ = number of filters (kernels) used in the convolutional layer.
 
+#### Output calculation formula for pooling layer:
+
+$\text{Output Size} = \left(\frac{\text{Input Size} - \text{Pooling Size}}{\text{Stride}}\right) + 1$
 
 
 ### P-Net (Proposal Network)
