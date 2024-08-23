@@ -28,9 +28,8 @@ To calculate the output dimensions of a convolution layer, you can use the follo
 
 For an input image with dimensions $\( H_{\text{in}} \times W_{\text{in}} \times D_{\text{in}} \)$, the output dimensions after applying a convolutional layer with $\( F \)$ filters, filter size $\( K \times K \)$, stride $\( S \)$, and padding $\( P \)$ are given by:
 
-1. **Output Height (\( H_{\text{out}} \))**:  
-   $
-   H_{\text{out}} = \left\lfloor \frac{H_{\text{in}} - K + 2P}{S} \right\rfloor + 1$
+1. **Output Height $(\( H_{\text{out}} \))$**:  
+   $H_{\text{out}} = \left\lfloor \frac{H_{\text{in}} - K + 2P}{S} \right\rfloor + 1$
 
 2. **Output Width (\( W_{\text{out}} \))**:  
    
