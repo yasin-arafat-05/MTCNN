@@ -19,6 +19,134 @@
 
 Image:01 `(MTCNN Structure)`
 
+#### Output calculation formula for convolution layer:
+
+
+To calculate the output dimensions of a convolution layer, you can use the following formula:
+
+### Output Dimensions Calculation for Convolution
+
+For an input image with dimensions $\( H_{\text{in}} \times W_{\text{in}} \times D_{\text{in}} \)$, the output dimensions after applying a convolutional layer with $\( F \)$ filters, filter size $\( K \times K \)$, stride $\( S \)$, and padding $\( P \)$ are given by:
+
+1. **Output Height (\( H_{\text{out}} \))**:  
+   $
+   H_{\text{out}} = \left\lfloor \frac{H_{\text{in}} - K + 2P}{S} \right\rfloor + 1$
+
+2. **Output Width (\( W_{\text{out}} \))**:  
+   
+   $W_{\text{out}} = \left\lfloor \frac{W_{\text{in}} - K + 2P}{S} \right\rfloor + 1$
+
+3. **Output Depth (\( D_{\text{out}} \))**:  
+   $D_{\text{out}} = F$
+
+Here:
+-  $H_{\text{in}}$ = height of the input image.
+- $W_{\text{in}}$ = width of the input image.
+- $D_{\text{in}}$ = depth (number of channels) of the input image.
+- $\( K \) = size of the kernel/filter (assumed square, \( K \times K \)).$
+- $\( S \)$ = stride (step size) of the convolution.
+- $\( P \)$ = padding (number of pixels added to each side of the input).
+- $\( F \)$ = number of filters (kernels) used in the convolutional layer.
+
+
+
+### P-Net (Proposal Network)
+1. **Input Size: 12x12x3**
+   - The input to P-Net is an image of size 12x12 pixels with 3 color channels (RGB).
+
+2. **First Convolution Layer (Conv: 3x3)**
+   - **Operation**: A convolution operation with 10 filters of size 3x3.
+   - **Output Size**: 10 feature maps of size 10x10 (after padding and stride are applied), resulting in a dimension of `10x10x10`.
+
+3. **Max Pooling Layer (MP: 3x3)**
+   - **Operation**: A max-pooling operation with a 3x3 window and a stride of 2.
+   - **Output Size**: This reduces the spatial dimensions to 5x5, resulting in a size of `5x5x10`.
+
+4. **Second Convolution Layer (Conv: 3x3)**
+   - **Operation**: A convolution operation with 16 filters of size 3x3.
+   - **Output Size**: This further reduces the spatial dimensions to 3x3, resulting in a size of `3x3x16`.
+
+5. **Third Convolution Layer (Conv: 3x3)**
+   - **Operation**: A convolution operation with 32 filters of size 3x3.
+   - **Output Size**: The output size becomes `1x1x32` due to the reduction in spatial dimensions.
+
+6. **Output Layers**
+   - **Face Classification**: `1x1x2` (indicates face or not)
+   - **Bounding Box Regression**: `1x1x4` (bounding box coordinates)
+   - **Facial Landmark Localization**: `1x1x10` (5 key points: left eye, right eye, nose, left mouth corner, right mouth corner)
+
+### R-Net (Refinement Network)
+1. **Input Size: 24x24x3**
+   - The input to R-Net is an image of size 24x24 pixels with 3 color channels.
+
+2. **First Convolution Layer (Conv: 3x3)**
+   - **Operation**: A convolution operation with 28 filters of size 3x3.
+   - **Output Size**: 28 feature maps of size 22x22.
+
+3. **Max Pooling Layer (MP: 3x3)**
+   - **Operation**: A max-pooling operation with a 3x3 window and stride of 2.
+   - **Output Size**: Reduces dimensions to `11x11x28`.
+
+4. **Second Convolution Layer (Conv: 3x3)**
+   - **Operation**: A convolution operation with 48 filters of size 3x3.
+   - **Output Size**: 48 feature maps of size 9x9.
+
+5. **Max Pooling Layer (MP: 3x3)**
+   - **Operation**: A max-pooling operation with a 3x3 window and stride of 2.
+   - **Output Size**: Reduces dimensions to `4x4x48`.
+
+6. **Third Convolution Layer (Conv: 2x2)**
+   - **Operation**: A convolution operation with 64 filters of size 2x2.
+   - **Output Size**: 64 feature maps of size `3x3`.
+
+7. **Fully Connected Layer**
+   - **Operation**: Flattens the feature maps to 576 units (3x3x64).
+   - **Output Size**: 128 units.
+
+8. **Output Layers**
+   - **Face Classification**: `2` (face or not)
+   - **Bounding Box Regression**: `4` (bounding box coordinates)
+   - **Facial Landmark Localization**: `10` (coordinates for 5 key points)
+
+### O-Net (Output Network)
+1. **Input Size: 48x48x3**
+   - The input to O-Net is an image of size 48x48 pixels with 3 color channels.
+
+2. **First Convolution Layer (Conv: 3x3)**
+   - **Operation**: A convolution operation with 32 filters of size 3x3.
+   - **Output Size**: 32 feature maps of size 46x46.
+
+3. **Max Pooling Layer (MP: 3x3)**
+   - **Operation**: A max-pooling operation with a 3x3 window and stride of 2.
+   - **Output Size**: Reduces dimensions to `23x23x32`.
+
+4. **Second Convolution Layer (Conv: 3x3)**
+   - **Operation**: A convolution operation with 64 filters of size 3x3.
+   - **Output Size**: 64 feature maps of size 21x21.
+
+5. **Max Pooling Layer (MP: 3x3)**
+   - **Operation**: A max-pooling operation with a 3x3 window and stride of 2.
+   - **Output Size**: Reduces dimensions to `10x10x64`.
+
+6. **Third Convolution Layer (Conv: 2x2)**
+   - **Operation**: A convolution operation with 64 filters of size 2x2.
+   - **Output Size**: Reduces spatial dimensions to `4x4x64`.
+
+7. **Max Pooling Layer (MP: 2x2)**
+   - **Operation**: A max-pooling operation with a 2x2 window and stride of 2.
+   - **Output Size**: Reduces dimensions to `3x3x64`.
+
+8. **Fully Connected Layer**
+   - **Operation**: Flattens the feature maps to 576 units (3x3x64).
+   - **Output Size**: 128 units.
+
+9. **Output Layers**
+   - **Face Classification**: `2` (face or not)
+   - **Bounding Box Regression**: `4` (bounding box coordinates)
+   - **Facial Landmark Localization**: `10` (coordinates for 5 key points)
+
+
+
 <br>
 <br>
 
